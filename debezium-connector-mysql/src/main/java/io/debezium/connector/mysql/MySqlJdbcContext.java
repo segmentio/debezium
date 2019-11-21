@@ -34,7 +34,7 @@ import io.debezium.util.Strings;
  */
 public class MySqlJdbcContext implements AutoCloseable {
 
-    protected static final String MYSQL_CONNECTION_URL = "jdbc:mysql://${hostname}:${port}/?useInformationSchema=true&nullCatalogMeansCurrent=false&useSSL=${useSSL}&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&zeroDateTimeBehavior=convertToNull";
+    protected static final String MYSQL_CONNECTION_URL = "jdbc:mysql://${hostname}:${port}/?useInformationSchema=true&nullCatalogMeansCurrent=false&useSSL=${useSSL}&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&zeroDateTimeBehavior=convertToNull&connectTimeout=${connectTimeout}";
     protected static ConnectionFactory FACTORY = JdbcConnection.patternBasedFactory(MYSQL_CONNECTION_URL);
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
@@ -53,6 +53,7 @@ public class MySqlJdbcContext implements AutoCloseable {
                                          .subset("database.", true)
                                          .edit()
                                          .with("useSSL", Boolean.toString(useSSL))
+                                         .with("connectTimeout", Integer.toString(connectionTimeoutMs()))
                                          .build();
         String driverClassName = jdbcConfig.getString(MySqlConnectorConfig.JDBC_DRIVER);
         this.jdbc = new JdbcConnection(jdbcConfig,
@@ -86,6 +87,8 @@ public class MySqlJdbcContext implements AutoCloseable {
     public int port() {
         return config.getInteger(MySqlConnectorConfig.PORT);
     }
+
+    public int connectionTimeoutMs() { return config.getInteger(MySqlConnectorConfig.CONNECTION_TIMEOUT_MS); }
 
     public SecureConnectionMode sslMode() {
         String mode = config.getString(MySqlConnectorConfig.SSL_MODE);
