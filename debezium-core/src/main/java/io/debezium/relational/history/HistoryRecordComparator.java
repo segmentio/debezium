@@ -8,6 +8,8 @@ package io.debezium.relational.history;
 import java.util.function.BiFunction;
 
 import io.debezium.document.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Compares HistoryRecord instances to determine which came first.
@@ -16,6 +18,7 @@ import io.debezium.document.Document;
  * @since 0.2
  */
 public class HistoryRecordComparator {
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * A comparator instance that requires the {@link HistoryRecord#source() records' sources} to be the same and considers only
@@ -49,7 +52,15 @@ public class HistoryRecordComparator {
      *         otherwise
      */
     public boolean isAtOrBefore(HistoryRecord record1, HistoryRecord record2) {
-        return isSameSource(record1.source(), record2.source()) && isPositionAtOrBefore(record1.position(), record2.position());
+        boolean sourceSame = isSameSource(record1.source(), record2.source());
+        boolean positionOk = isPositionAtOrBefore(record1.position(), record2.position());
+        if (!sourceSame) {
+            logger.debug("isAtOrBefore: source is not same ({} != {})", record1.source(), record2.source());
+        }
+        if (!positionOk) {
+            logger.debug("isAtOrBefore: position is not ok ({} vs {})", record1.position(), record2.position());
+        }
+        return sourceSame && positionOk;
     }
 
     protected boolean isPositionAtOrBefore(Document position1, Document position2) {
