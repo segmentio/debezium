@@ -171,7 +171,10 @@ public class RecordMakers {
             return true;
         }
         TableSchema tableSchema = schema.schemaFor(id);
-        if (tableSchema == null) return false;
+        if (tableSchema == null) {
+            logger.debug("Skipping b/c no schema exists for {}", id);
+            return false;
+        }
 
         String topicName = topicSelector.getTopic(id);
         Envelope envelope = Envelope.defineSchema()
