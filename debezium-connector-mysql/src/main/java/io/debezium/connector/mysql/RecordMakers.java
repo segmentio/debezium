@@ -172,7 +172,7 @@ public class RecordMakers {
         }
         TableSchema tableSchema = schema.schemaFor(id);
         if (tableSchema == null) {
-            logger.debug("Skipping b/c no schema exists for {}", id);
+            logger.debug("Skipping because no schema exists for {}", id);
             return false;
         }
 
