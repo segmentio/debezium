@@ -184,6 +184,7 @@ public class KafkaDatabaseHistory extends AbstractDatabaseHistory {
         try (KafkaConsumer<String, String> historyConsumer = new KafkaConsumer<>(consumerConfig.asProperties());) {
             // Subscribe to the only partition for this topic, and seek to the beginning of that partition ...
             logger.debug("Subscribing to database history topic '{}'", topicName);
+            logger.debug("Sweet");
             historyConsumer.subscribe(Collect.arrayListOf(topicName));
 
             // Read all messages in the topic ...
