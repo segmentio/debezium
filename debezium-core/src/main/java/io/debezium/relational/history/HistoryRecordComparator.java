@@ -56,9 +56,10 @@ public class HistoryRecordComparator {
         boolean positionOk = isPositionAtOrBefore(record1.position(), record2.position());
         if (!sourceSame) {
             logger.debug("isAtOrBefore: source is not same ({} != {})", record1.source(), record2.source());
-        }
-        if (!positionOk) {
+        } else if (!positionOk) {
             logger.debug("isAtOrBefore: position is not ok ({} vs {})", record1.position(), record2.position());
+        } else {
+            logger.debug("isAtOrBefore: everything looks good");
         }
         return sourceSame && positionOk;
     }
