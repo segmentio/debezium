@@ -82,6 +82,7 @@ public abstract class AbstractDatabaseHistory implements DatabaseHistory {
                     }
                 }
             } else {
+                logger.debug("Totally skipping {}", recovered.ddl());
                 logger.debug("Skipping: {}", recovered.ddl());
             }
         });
